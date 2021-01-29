@@ -1,0 +1,42 @@
+#!/bin/bash
+# ANDROID DEBLOATER CLI SCRIPT, Jhagas Hana Winaya
+# SEMI AUTOMATED, BUT MUCH EASIER, NO NEED TO TYPE THOSE LONG COMMANDS
+
+# Ansi color code variables
+red="\e[0;91m"
+bold="\e[1m"
+reset="\e[0m"
+
+# Is adb installed?
+[ ! $(which adb) ] && echo "Please install adb!" && exit 1
+
+# Defining Variables
+LOKASI=~/android-debloater/1.apk
+HELPER=$(adb install $LOKASI && exit)
+cari=$(adb shell pm list packages | grep $2 | cut -c 9-)
+   F='find'
+   R='remove'
+   I='install-helper'
+
+berhasil=Success
+
+# Executing Commands
+if [ $1 == $F ]; then
+        echo -e "${red}${bold}$cari${reset}"
+   elif [ $1 == $R ]; then
+        if [[ $(adb shell pm uninstall $2) = $berhasil ]]; then
+                echo "Success"
+           else
+                adb shell pm uninstall -k --user 0 $2
+        fi
+   elif [ $1 == $I ]; then
+        echo "-----"
+        echo "$HELPER"
+   else
+        echo "-----"
+        echo -e "${bold}Wrong arguments!${reset}"
+        echo -e "USAGE : \n1. Find an app to Uninstall = android-debloater find [APP-NAME]"
+        echo -e "2. Uninstall for main user = android-debloater remove [APP-PACKAGE-NAME]"
+        echo -e "3. Install Helper to your phone = android-debloater install-helper"
+        echo -e "${red}${bold}TO RESTORE, YOU NEED TO DO A FACTORY RESET, \nSO DO THIS CAREFULLY OR YOUR PHONE WILL FUCKING BROKEN!!${reset}"
+fi
