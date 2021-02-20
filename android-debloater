@@ -1,12 +1,14 @@
 #!/bin/bash
 
-#Ascii color variables
+# Ascii color variables
 r="\033[1;31m"
 b="\e[1m"
 n="\e[0m"
 
+
 # Is adb installed?
 [ -z $(which adb) ] && echo "Please install adb!" && exit 1
+
 
 # Defining Variables
 LOKASI=~/android-debloater/1.apk
@@ -26,6 +28,7 @@ help() {
 arg_err() {
      echo -e "${b}Wrong arguments!${n}"
      echo -e "See ${r}android-debloater help${n} for some helps"
+     exit
 }
 
 ins_help() {
@@ -36,8 +39,10 @@ find() {
      adb shell pm list packages | grep ${app} | cut -c 9-
 }
 
+
 # In case of NO Argument
 [ -z $1 ] && help | head -n1 -n2 && echo -e "\nsee ${r}android-debloater help${n} for helps" && exit
+
 
 # Executing Command
 case $1 in
@@ -53,9 +58,23 @@ case $1 in
           help
           ;;
      find)
-          echo "----" 
-          printf "%b$(find)%b\n" "$r" "$n"
-          echo "----" 
+          if [ -z $2 ]; then
+               echo -e "${r}Type app name to find the package name${n}"
+               echo -e "For Example;\n${b}android-debloater find whatsapp${n}"
+          else
+               echo "----" 
+               printf "%b$(find)%b\n" "$r" "$n"
+               echo "----" 
+               exit
+          fi
+          ;;
+     install-helper)
+          ins_help
+          ;;
+     *)
+          arg_err
+          ;;
+esac
           exit
           ;;
      install-helper)
