@@ -1,42 +1,69 @@
 #!/bin/bash
-# ANDROID DEBLOATER CLI SCRIPT, Jhagas Hana Winaya
-# SEMI AUTOMATED, BUT MUCH EASIER, NO NEED TO TYPE THOSE LONG COMMANDS
 
-# Ansi color code variables
-red="\e[0;91m"
-bold="\e[1m"
-reset="\e[0m"
+#Ascii color variables
+r="\033[1;31m"
+b="\e[1m"
+n="\e[0m"
 
 # Is adb installed?
-[ ! $(which adb) ] && echo "Please install adb!" && exit 1
+[ -z $(which adb) ] && echo "Please install adb!" && exit 1
 
 # Defining Variables
 LOKASI=~/android-debloater/1.apk
-HELPER=$(adb install $LOKASI && exit)
-cari=$(adb shell pm list packages | grep $2 | cut -c 9-)
-   F='find'
-   R='remove'
-   I='install-helper'
+app="$2"
+berhasil="Success"
 
-berhasil=Success
+help() {
+     echo -e "${b}ANDROID DEBLOATER CLI SCRIPT${n}"
+     echo -e "Semi-automated, make your work easier\n"
+     echo -e "${b}OPTIONS:${n} \nFind app to Uninstall:\t\tfind [APP-NAME]"
+     echo -e "Uninstall an app:\t\tremove [APP-PACKAGE-NAME]"
+     echo -e "Install Helper to your phone:\tinstall-helper\n"
+     echo -e "${r}TO RESTORE, YOU NEED TO DO A FACTORY RESET"
+     echo -e "SO DO THIS CAREFULLY OR YOUR PHONE WILL BE BROKEN!!${n}"
+}
 
-# Executing Commands
-if [ $1 == $F ]; then
-        echo -e "${red}${bold}$cari${reset}"
-   elif [ $1 == $R ]; then
-        if [[ $(adb shell pm uninstall $2) = $berhasil ]]; then
-                echo "Success"
-           else
-                adb shell pm uninstall -k --user 0 $2
-        fi
-   elif [ $1 == $I ]; then
-        echo "-----"
-        echo "$HELPER"
-   else
-        echo "-----"
-        echo -e "${bold}Wrong arguments!${reset}"
-        echo -e "USAGE : \n1. Find an app to Uninstall = android-debloater find [APP-NAME]"
-        echo -e "2. Uninstall for main user = android-debloater remove [APP-PACKAGE-NAME]"
-        echo -e "3. Install Helper to your phone = android-debloater install-helper"
-        echo -e "${red}${bold}TO RESTORE, YOU NEED TO DO A FACTORY RESET, \nSO DO THIS CAREFULLY OR YOUR PHONE WILL FUCKING BROKEN!!${reset}"
-fi
+arg_err() {
+     echo -e "${b}Wrong arguments!${n}"
+     echo -e "See ${r}android-debloater help${n} for some helps"
+}
+
+ins_help() {
+     adb install $LOKASI && exit
+}
+
+find() {
+     adb shell pm list packages | grep ${app} | cut -c 9-
+}
+
+# In case of NO Argument
+[ -z $1 ] && help | head -n1 -n2 && echo -e "\nsee ${r}android-debloater help${n} for helps" && exit
+
+# Executing Command
+case $1 in
+     remove)
+          if [[ $(adb shell pm uninstall $2) = $berhasil ]]; then
+               echo "Success"
+          else
+               adb shell pm uninstall -k --user 0 $2
+          fi
+          exit
+          ;;
+     help)
+          help
+          ;;
+     find)
+          echo "----" 
+          printf "%b$(find)%b\n" "$r" "$n"
+          echo "----" 
+          exit
+          ;;
+     install-helper)
+          ins_help
+          exit
+          ;;
+     *)
+          arg_err
+          exit
+          ;;
+esac
