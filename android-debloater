@@ -75,14 +75,3 @@ case $1 in
           arg_err
           ;;
 esac
-          exit
-          ;;
-     install-helper)
-          ins_help
-          exit
-          ;;
-     *)
-          arg_err
-          exit
-          ;;
-esac
