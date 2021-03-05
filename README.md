@@ -3,6 +3,8 @@ Semi-Automated NON-ROOT android debloater script build in BASH. What is it mean 
 This is a very dangerous task to do and can broke your phone, semi-automated means that this script helps you a lot but you still have a control over what do you want to do. 
 This script can also automatically install an APK Inspector to your phone, so you can carefully get the apps package name in your phone then remove it!
 
+> Check out my other android-linux integration CLI script, [wireless-scrcpy](https://github.com/jhagas/wireless-scrcpy) and [gsconnect-cli](https://github.com/jhagas/gsconnect-cli)
+
 ## :penguin: Download
 For download, just copy these commands into your terminal and press ENTER
 ```bash
